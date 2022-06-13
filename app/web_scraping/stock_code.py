@@ -1,4 +1,5 @@
-from email import header
+from app import app, db
+
 from requests.exceptions import Timeout
 
 import requests
@@ -23,6 +24,9 @@ def correspondence_table():     #抓取股票代碼對應股票名稱
     
     for i in oring_table:                   #把股票代碼與名稱分開
         table.append(i.split("\u3000"))     #table[0][0] = 股票代碼     table[0][1] = 股票名稱
+
+def data_input_database():
+    return
 
 if __name__ == '__main__':
     correspondence_table()

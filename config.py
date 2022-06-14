@@ -9,6 +9,7 @@ class config():
     SQL_DATABASE = "taiwan_stock"
 
     # Database Setting
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://"+SQL_USERNAME+":"+SQL_PASSWORD+"@"+SQL_ROUTE+"/"+SQL_DATABASE
 
 class mail_config():

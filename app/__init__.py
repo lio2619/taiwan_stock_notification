@@ -23,4 +23,4 @@ migrate = Migrate(app, db)
 manager = Manager(db)
 manager.add_command('db', MigrateCommand)
 
-from app.save_stock_code import models
+from app.user import models

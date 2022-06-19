@@ -5,8 +5,6 @@ import os
 import re
 import csv
 
-#可以試看看從這邊抓及時股價     https://www.google.com/finance/quote/3481:TPE
-
 def correspondence_table():     #抓取股票代碼對應股票名稱
     table = []
     headers = {'user-agent' : 'Mozilla/5.0'}
@@ -17,7 +15,7 @@ def correspondence_table():     #抓取股票代碼對應股票名稱
         res.close()                                     #把requests關掉
     except Timeout:
         print("website takes too long to respond")
-        os.exit()
+        os._exit()
 
     oring_table = re.findall('\w*\u3000\w*', html)        #獲得股票代碼的對應表，還沒處理過
     

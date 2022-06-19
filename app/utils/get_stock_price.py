@@ -41,8 +41,7 @@ def stock_price(stock_code):
         print("div class name is wrong")
         os._exit()
 
-    print(receive_stock_price)
-    print(type(receive_stock_price))    #str
+    return receive_stock_price
 
 if __name__ == '__main__':
     stock_name = input("please enter stock name\n")

@@ -24,3 +24,7 @@ manager = Manager(db)
 manager.add_command('db', MigrateCommand)
 
 from app.user import models
+from app.user import controllers
+
+from app.utils import request_schema
+from app.utils import send_mail

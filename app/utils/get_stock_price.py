@@ -8,7 +8,7 @@ import os
 def read_csv_dict(stock_name):
     stock_name_and_code = {}
 
-    with open('../stock_code.csv', 'r') as file:
+    with open('app/stock_code.csv', 'r') as file:
         read = csv.reader(file)
 
         for i in read:

@@ -25,3 +25,14 @@ class mail_config():
 
     # Mail Password
     MAIL_PASSWORD = '&g4AU@;><5;{Q*FZ'
+
+class apscheduler_job_config(object):
+    JOBS = [
+        {
+            'id'      : 'compare_price',                     #自己設定的id
+            'func'    : 'app.user.utils:compare_price',      #要啟動的程式  移動到資料夾後用:來表示要啟動哪個
+            'args'    : None,                                #輸入的參數
+            'trigger' : 'interval',                          #interval = 循環
+            'minutes' : 1                                    #seconds = 秒   minutes = 分
+        }
+    ]

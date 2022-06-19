@@ -1,9 +1,27 @@
+#utils = 寫controller裡面會用到的程式
+
 from app import app
 from app import db
 from app import ma
 
-from app.user.models import User
-from app.user.models import UserSchema
+from app.user.models import UserTargetPrice
+from app.user.models import UserEmail
 
-user_schema = UserSchema()
-user_schema = UserSchema(many = True)
+from app.utils.get_stock_price import stock_price
+
+#比較目標價與目前價
+def compare_price():
+    stock = []
+    counts = UserEmail.query.count()
+    
+    for count in range(1, counts + 1):
+        user_email = UserEmail.query.get(count)
+        users = UserTargetPrice.query.filter_by(email = user_email.id).all()
+
+        for user in users:
+            currently_price = stock_price(user.stock_code)[1:]
+
+            if float(currently_price) >= float(user.target_price):
+                stock.append([user.stock_name, user.target_price])
+    
+    return stock

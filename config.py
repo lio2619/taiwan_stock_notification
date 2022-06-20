@@ -29,10 +29,14 @@ class mail_config():
 class apscheduler_job_config(object):
     JOBS = [
         {
-            'id'      : 'compare_price',                     #自己設定的id
-            'func'    : 'app.user.utils:compare_price',      #要啟動的程式  移動到資料夾後用:來表示要啟動哪個
-            'args'    : None,                                #輸入的參數
-            'trigger' : 'interval',                          #interval = 循環
-            'minutes' : 1                                    #seconds = 秒   minutes = 分
+            'id'                 : 'compare_price',                     #自己設定的id
+            'func'               : 'app.user.utils:compare_price',      #要啟動的程式  移動到資料夾後用:來表示要啟動哪個
+            'args'               : None,                                #輸入的參數
+            'trigger'            : 'cron',                          #interval = 循環   cron = 相對時間
+            'day_of_week'        : 'mon-fri',
+            'hour'               : '9-12',
+            'minute'             : '0-59',
+            'second'             : '0',
+            'misfire_grace_time' : 10                                   #就算超過時間。只要在10秒內就ok
         }
     ]

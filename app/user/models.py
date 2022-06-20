@@ -10,6 +10,7 @@ class UserTargetPrice(db.Model):
     id           = db.Column(db.Integer, primary_key = True, autoincrement = True)
     username     = db.Column(db.Integer, db.ForeignKey("users_email.id"))
     email        = db.Column(db.Integer, db.ForeignKey("users_email.id"))
+    already_send = db.Column(db.Integer, nullable = False)
     stock_name   = db.Column(db.String(30), nullable = False)
     stock_code   = db.Column(db.String(30), nullable = False)
     target_price = db.Column(db.String(30), nullable = False)
@@ -19,6 +20,7 @@ class UserTargetPrice(db.Model):
     def __init__(self, username, email, stock_name, target_price):
         self.username = username
         self.email = email
+        self.already_send = 0
         self.stock_name = stock_name
         self.target_price = target_price
         self.stock_code = read_csv_dict(stock_name)

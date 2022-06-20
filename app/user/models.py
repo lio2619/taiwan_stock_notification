@@ -10,7 +10,6 @@ class UserTargetPrice(db.Model):
     id           = db.Column(db.Integer, primary_key = True, autoincrement = True)
     username     = db.Column(db.Integer, db.ForeignKey("users_email.id"))
     email        = db.Column(db.Integer, db.ForeignKey("users_email.id"))
-    already_send = db.Column(db.Integer, nullable = False)
     stock_name   = db.Column(db.String(30), nullable = False)
     stock_code   = db.Column(db.String(30), nullable = False)
     target_price = db.Column(db.String(30), nullable = False)
@@ -20,7 +19,6 @@ class UserTargetPrice(db.Model):
     def __init__(self, username, email, stock_name, target_price):
         self.username = username
         self.email = email
-        self.already_send = 0
         self.stock_name = stock_name
         self.target_price = target_price
         self.stock_code = read_csv_dict(stock_name)
@@ -42,6 +40,19 @@ class UserEmail(db.Model):
     def __repr__(self):
         return 'name %s' %self.name
 
+class UserStockPrice(db.Model):
+    __tablename__ = 'users_stock_price'
+
+    stock_code     = db.Column(db.String(30), nullable = False, unique = True, primary_key = True)
+    stock_price    = db.Column(db.String(100), nullable = False, unique = True)
+
+    def __init__(self, stock_code, stock_price):
+        self.stock_code = stock_code
+        self.stock_price = stock_price
+
+    def __repr__(self):
+        return 'name %s' %self.name
+
 class UserTargetPriceSchema(ma.Schema):
     class Meta:
         fields = (
@@ -56,4 +67,11 @@ class UserEmailSchema(ma.Schema):
         fields = (
             "username",
             "email",
+        )
+
+class UserStockPriceSchema(ma.Schema):
+    class Meta:
+        fields = (
+            "stock_code",
+            "stock_price",
         )

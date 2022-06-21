@@ -47,6 +47,8 @@ def compare_price():
 
             send_mail(mail_title, user_email.email, mail_message)
 
+    del stock
+
 #刪除比對資料庫
 def delete_stock_price_db():
     users = UserStockPrice.query.all()

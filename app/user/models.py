@@ -56,8 +56,6 @@ class UserStockPrice(db.Model):
 class UserTargetPriceSchema(ma.Schema):
     class Meta:
         fields = (
-            "username",
-            "email",
             "stock_name",
             "target_price"
         )

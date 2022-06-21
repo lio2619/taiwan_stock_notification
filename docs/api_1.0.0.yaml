@@ -1,0 +1,176 @@
+---
+openapi: 3.0.0
+info:
+  title: taiwan stock information
+  description: 台灣股票定期追蹤價錢 [Github](https://github.com/club-2-0)
+  contact:
+    email: lio261954@gmail.com
+  version: 1.0.0
+tags:
+- name: user
+  description: 使用者帳戶相關
+paths:
+  "/user/create":
+    post:
+      tags:
+      - user
+      summary: 使用者決定要追蹤的股票
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#components/schemas/User_create"
+      parameters:
+      - name: username
+        in: path
+        description: 要取得使用者名稱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: email
+        in: path
+        description: 要取得信箱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: stock_name
+        in: path
+        description: 要取得股票名稱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: target_price
+        in: path
+        description: 要取得目標價錢
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+        '400':
+          description: missing parameter
+  "/user/get":
+    post:
+      tags:
+      - user
+      summary: 讓使用者知道目前有追蹤哪些股票
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#components/schemas/User_get_in"
+      parameters:
+      - name: email
+        in: path
+        description: 要取得使用者信箱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/User_get_out"
+        '400':
+          description: missing parameter
+  "/user/update":
+    put:
+      tags:
+      - user
+      summary: 讓使用者更新目標股價
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#components/schemas/User_update"
+      parameters:
+      - name: email
+        in: path
+        description: 要取得使用者信箱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: stock_name
+        in: path
+        description: 要取得股票名稱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: target_price
+        in: path
+        description: 要取得目標價錢
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+        '400':
+          description: missing parameter
+components:
+  schemas:
+    User_create:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        stock_name:
+          type: string
+        target_price:
+          type: string
+      example:
+        username: 陳XX
+        email: lio@gmail.com
+        stock_name: 群創
+        target_price: '60'
+    User_get_in:
+      type: object
+      properties:
+        email:
+          type: string
+      example:
+        email: lio@gmail.com
+    User_get_out:
+      type: object
+      properties:
+        stock_name:
+          type: string
+        target_price:
+          type: string
+      example:
+        stock_name: 群創
+        target_price: '60'
+    User_update:
+      type: object
+      properties:
+        email:
+          type: string
+        stock_name:
+          type: string
+        target_price:
+          type: string
+      example:
+        email: lio@gmail.com
+        stock_name: 群創
+        target_price: '20'

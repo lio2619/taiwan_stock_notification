@@ -1,6 +1,5 @@
 #controllers 寫要把甚麼東西放到資料庫裡
 
-from re import L
 from app import app
 from app import db
 from app import ma
@@ -10,6 +9,7 @@ from app.user.models import UserTargetPriceSchema
 from app.user.models import UserEmail
 
 from app.utils.request_schema import check_request_json_schema
+from app.utils.get_stock_price import read_csv_dict
 
 from flask import make_response
 from flask import jsonify
@@ -31,6 +31,10 @@ def user_create_target_price():
     email        = data['email']
     stock_name   = data['stock_name']
     target_price = data['target_price']
+    
+    stock_code = read_csv_dict(stock_name)
+    if not stock_code:
+        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 405)
 
     judge = UserEmail.query.filter_by(email = email).first()
 
@@ -40,15 +44,21 @@ def user_create_target_price():
         db.session.commit()
         user = UserEmail.query.filter_by(email = email).first()
         
-        price = UserTargetPrice(user.id, user.id, stock_name, target_price)
+        price = UserTargetPrice(user.id, user.id, stock_name, target_price, stock_code)
         db.session.add(price)
         db.session.commit()
 
         return make_response(jsonify({'message' : 'no user create all success'}), 200)
 
-    price = UserTargetPrice(judge.id, judge.id, stock_name, target_price)
-    db.session.add(price)
-    db.session.commit()
+    already = UserTargetPrice.query.filter_by(email = judge.id, stock_name = stock_name).first()
+
+    if already:
+        already.target_price = target_price
+        db.session.commit()
+    else:
+        price = UserTargetPrice(judge.id, judge.id, stock_name, target_price, stock_code)
+        db.session.add(price)
+        db.session.commit()
 
     return make_response(jsonify({'message' : 'already have user add stock success'}), 200)
 
@@ -61,17 +71,14 @@ def get_email_stock():
     if missing:
         return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 400)
 
-    users_dict = {}
-
     data = request.get_json()
     email        = data['email']
 
-    users_email = UserEmail.query.all()
+    user_email = UserEmail.query.filter_by(email = email).first()
+    if not user_email:
+        return make_response(jsonify({'error' : {'wrong email' : email}}), 400)
 
-    for user_email in users_email:
-        users_dict[user_email.email] = user_email.id
-
-    user = UserTargetPrice.query.filter_by(email = users_dict[email]).all()
+    user = UserTargetPrice.query.filter_by(email = user_email.id).all()
 
     return make_response(jsonify({'data': user_target_price_schema.dump(user)}), 200)
 
@@ -84,30 +91,22 @@ def update_target_price():
     if missing:
         return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 400)
 
-    users_dict = {}
-    users__price_dict = {}
-
     data = request.get_json()
     email        = data['email']
     stock_name   = data['stock_name']
     target_price = data['target_price']
 
-    users_email = UserEmail.query.all()
+    
+    user_email = UserEmail.query.filter_by(email = email).first()
+    if not user_email:
+        return make_response(jsonify({'error' : {'wrong email' : email}}), 400)
 
-    for user_email in users_email:
-        users_dict[user_email.email] = user_email.id
+    update_target = UserTargetPrice.query.filter_by(email = user_email.id, stock_name = stock_name).first()
+    if not update_target:
+        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 401)
 
-    users_target = UserTargetPrice.query.all()
-
-    for user_target in users_target:
-        users__price_dict[user_target.email, stock_name] = user_target
-
-    update_target = users__price_dict[users_dict[email], stock_name]
     update_target.target_price = target_price
 
     db.session.commit()
-
-    del users_dict
-    del users__price_dict
 
     return make_response(jsonify({'message' : 'update target success'}), 200)

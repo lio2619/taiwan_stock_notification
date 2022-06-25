@@ -17,7 +17,7 @@ def read_csv_dict(stock_name):
     try:
         return stock_name_and_code[stock_name]
     except:
-        return stock_name
+        return False
 
 def stock_price(stock_code):
     headers = {'user-agent' : 'Mozilla/5.0'}

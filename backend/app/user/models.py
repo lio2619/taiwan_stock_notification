@@ -2,8 +2,6 @@ from app import app
 from app import db
 from app import ma
 
-from app.utils.get_stock_price import read_csv_dict
-
 class UserTargetPrice(db.Model):
     __tablename__ = 'users_target_price'
 
@@ -16,15 +14,15 @@ class UserTargetPrice(db.Model):
     created_at   = db.Column(db.DateTime, default = db.func.now())
     updated_at   = db.Column(db.DateTime, onupdate = db.func.now())
 
-    def __init__(self, username, email, stock_name, target_price):
+    def __init__(self, username, email, stock_name, target_price, stock_code):
         self.username = username
         self.email = email
         self.stock_name = stock_name
         self.target_price = target_price
-        self.stock_code = read_csv_dict(stock_name)
+        self.stock_code = stock_code
 
     def __repr__(self):
-        return 'name %s' %self.name
+        return 'email：%s    stock_name：%s   target_price：%s' %(self.email, self.stock_name, self.target_price)
 
 class UserEmail(db.Model):
     __tablename__ = 'users_email'
@@ -38,7 +36,7 @@ class UserEmail(db.Model):
         self.email = email
 
     def __repr__(self):
-        return 'name %s' %self.name
+        return 'username：%s  email：%s' %(self.username, self.email)
 
 class UserStockPrice(db.Model):
     __tablename__ = 'users_stock_price'
@@ -51,7 +49,7 @@ class UserStockPrice(db.Model):
         self.stock_price = stock_price
 
     def __repr__(self):
-        return 'name %s' %self.name
+        return 'stock_code：%s  stock_price：%s' %(self.stock_code, self.stock_price)
 
 class UserTargetPriceSchema(ma.Schema):
     class Meta:

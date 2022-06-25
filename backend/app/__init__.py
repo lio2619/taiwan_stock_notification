@@ -7,6 +7,7 @@ from flask_migrate import Migrate
 from flask_migrate import MigrateCommand
 from flask_apscheduler import APScheduler
 from flask_mail import Mail
+from flask_cors import CORS
 
 from config import config
 from config import mail_config
@@ -38,6 +39,8 @@ scheduler.init_app(app)
 
 mail = Mail()
 mail.init_app(app)
+
+CORS(app, supports_credentials = True)
 
 from app.user import models
 from app.user import controllers

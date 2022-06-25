@@ -1,6 +1,12 @@
 # git
 1. git rm --cached config.py = 移除追蹤config.py
 
+# 20220625
+1. 把user的model的__repr__改善
+2. 把suer的controllers的錯誤拋出方式改善
+3. 如果輸入錯誤的股票名稱會回傳false
+4. flask_cors可以跨網域，如果沒有的話會出現錯誤
+
 # 20220621
 1. 可以更新資料了
 2. 能查詢資料，不過現在是用post

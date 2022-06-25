@@ -8,7 +8,13 @@
 			<button v-on:click="button">查詢</button>
 		</form>
 		<hr />
-		<h2><p>{{all_data}}</p></h2>
+		<h2>
+			<div v-for="data in all_data" :key="data">
+				<div v-for="d in data" :key="d">
+					{{d.stock_name}} : {{d.target_price}}
+				</div>
+			</div>
+		</h2>
 	</div>
 </template>
 

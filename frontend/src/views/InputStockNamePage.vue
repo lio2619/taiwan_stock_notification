@@ -20,26 +20,44 @@
 			<button v-on:click="button">提交</button>
 		</form>
 		<hr />
+		<h2><p>{{create}}</p></h2>
 	</div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
 	data() {
 		return {
-			user: "",
-			email: "",
-			stock: "",
-			price: "",
+			create: "",
 		};
 	},
 	methods: {
 		create_user() {
-			alert("提交成功！！！\n");
-			console.log("user", this.user);
-			console.log("email", this.email);
-			console.log("stock", this.stock);
-			console.log("price", this.price);
+			axios.post('http://127.0.0.1:5000/user/create', {
+				username:this.user,
+				email: this.email,
+				stock_name: this.stock,
+				target_price: this.price
+			})
+			.then(res => {
+				console.log(res);
+				this.create = '創建成功';
+			})
+			.catch(error =>{
+				if(error.response){
+					if (error.response.status == 400){
+						this.create = '請輸入正確的信箱';
+					}else if(error.response.status == 405){
+						this.create = '請輸入正確的股票名稱';
+					}
+				}else if(error.request){
+					alert("沒有收到回應");
+				}else{
+					alert("伺服器請求失敗");
+				}
+			})
 		},
 	},
 };

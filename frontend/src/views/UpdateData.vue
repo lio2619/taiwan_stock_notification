@@ -13,27 +13,46 @@
 				<label for="price">價錢:&nbsp;&nbsp;&nbsp;</label>
 				<input id="price" type="text" v-model.trim="price" />
 			</h2>
-			<button v-on:click="button">提交</button>
+			<button v-on:click="button">更新</button>
 		</form>
 		<hr />
+		<h2><p>{{error_message}}</p></h2>
 	</div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
 	data() {
 		return {
-			email: "",
-			stock: "",
-			price: "",
-		};
+			error_message: ''
+		}
 	},
 	methods: {
 		update_data() {
-			alert("更新成功！！！\n");
-			console.log("email", this.email);
-			console.log("stock", this.stock);
-			console.log("price", this.price);
+			axios.put('http://127.0.0.1:5000/user/update', {
+				email: this.email,
+				stock_name: this.stock,
+				target_price: this.price
+			})
+			.then(res => {
+				console.log(res);
+				this.error_message = '更新成功';
+			})
+			.catch(error =>{
+				if(error.response){
+					if (error.response.status == 400){
+						this.error_message = '請輸入正確的信箱';
+					}else if(error.response.status == 401){
+						this.error_message = '請輸入正確的股票名稱';
+					}
+				}else if(error.request){
+					alert("沒有收到回應");
+				}else{
+					alert("伺服器請求失敗");
+				}
+			})
 		},
 	},
 };

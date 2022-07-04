@@ -24,7 +24,7 @@ def user_create_target_price():
     missing, response_body = check_request_json_schema(request_schema, request.json)
 
     if missing:
-        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 400)
+        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 406)
 
     data = request.get_json()
     username     = data['username']
@@ -34,7 +34,7 @@ def user_create_target_price():
     
     stock_code = read_csv_dict(stock_name)
     if not stock_code:
-        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 405)
+        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 400)
 
     judge = UserEmail.query.filter_by(email = email).first()
 
@@ -69,7 +69,7 @@ def get_email_stock():
     missing, response_body = check_request_json_schema(request_schema, request.json)
 
     if missing:
-        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 400)
+        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 406)
 
     data = request.get_json()
     email        = data['email']
@@ -89,7 +89,7 @@ def update_target_price():
     missing, response_body = check_request_json_schema(request_schema, request.json)
 
     if missing:
-        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 400)
+        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 406)
 
     data = request.get_json()
     email        = data['email']
@@ -103,7 +103,7 @@ def update_target_price():
 
     update_target = UserTargetPrice.query.filter_by(email = user_email.id, stock_name = stock_name).first()
     if not update_target:
-        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 401)
+        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 400)
 
     update_target.target_price = target_price
 

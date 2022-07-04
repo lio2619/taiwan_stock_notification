@@ -48,9 +48,9 @@ export default {
 			.catch(error =>{
 				if(error.response){
 					if (error.response.status == 400){
-						this.create = '請輸入正確的信箱';
-					}else if(error.response.status == 405){
 						this.create = '請輸入正確的股票名稱';
+					}else if(error.response.status == 406){
+						this.create = '請填入所有的資料';
 					}
 				}else if(error.request){
 					alert("沒有收到回應");

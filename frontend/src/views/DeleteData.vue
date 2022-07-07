@@ -1,18 +1,17 @@
 <template>
 	<div>
-		<form @submit.prevent="now_stock_price">
+		<form @submit.prevent="delete_data">
 			<h2>
-				<label for="stock">股票名稱:&nbsp;&nbsp;&nbsp;</label>
+				<label for="email">信箱:&nbsp;&nbsp;&nbsp;</label>
+				<input id="email" type="text" v-model.trim="email" />
+			</h2>
+			<h2>
+				<label for="stock">股票:&nbsp;&nbsp;&nbsp;</label>
 				<input id="stock" type="text" v-model.trim="stock" />
 			</h2>
-			<button v-on:click="button">查詢價錢</button>
+			<button v-on:click="button">刪除</button>
 		</form>
 		<hr />
-		<h2>
-			<div v-for="data in datas" :key="data">
-				股票名稱：{{stock}} 	{{data}}
-			</div>
-		</h2>
 		<h2><p>{{error_message}}</p></h2>
 	</div>
 </template>
@@ -23,28 +22,25 @@ import axios from 'axios';
 export default {
 	data() {
 		return {
-			datas: '',
 			error_message: ''
 		}
 	},
 	methods: {
-		now_stock_price() {
-			axios.post('http://127.0.0.1:5000/user/search', {
-				stock_name: this.stock
+		delete_data() {
+			axios.post('http://127.0.0.1:5000/user/delete', {
+				email : this.email,
+				stock_name : this.stock
 			})
 			.then(res => {
 				console.log(res);
-				this.datas = res.data;
-				this.error_message = '';
+				this.error_message = '刪除成功';
 			})
 			.catch(error =>{
 				if(error.response){
 					if (error.response.status == 400){
-						this.error_message = '請檢查股票名稱是否有誤';
-						this.datas = '';
+						this.error_message = '請檢查信箱與股票名稱是否有誤';
 					}else if(error.response.status == 406){
 						this.error_message = '請填入所有的資料';
-						this.datas = '';
 					}
 				}else if(error.request){
 					alert("沒有收到回應");

@@ -57,6 +57,8 @@ paths:
         '200':
           description: success
         '400':
+          description: wrong stock name
+        '406':
           description: missing parameter
   "/user/get":
     post:
@@ -85,6 +87,8 @@ paths:
               schema:
                 "$ref": "#components/schemas/User_get_out"
         '400':
+          description: wrong email
+        '406':
           description: missing parameter
   "/user/update":
     put:
@@ -125,6 +129,72 @@ paths:
         '200':
           description: success
         '400':
+          description: wrong email or stock name
+        '406':
+          description: missing parameter
+  "/user/search":
+    post:
+      tags:
+      - user
+      summary: 讓使用者查詢目前目標股價
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#components/schemas/User_search"
+      parameters:
+      - name: stock_name
+        in: path
+        description: 要取得股票名稱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                "$ref": "#components/schemas/User_search_out"
+        '400':
+          description: wrong stock name
+        '406':
+          description: missing parameter
+  "/user/delete":
+    post:
+      tags:
+      - user
+      summary: 讓使用者刪除追蹤資訊
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#components/schemas/User_delete"
+      parameters:
+      - name: email
+        in: path
+        description: 要取得使用者信箱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: stock_name
+        in: path
+        description: 要取得股票名稱
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: success
+        '400':
+          description: wrong email or stock name
+        '406':
           description: missing parameter
 components:
   schemas:
@@ -174,3 +244,27 @@ components:
         email: lio@gmail.com
         stock_name: 群創
         target_price: '20'
+    User_search:
+      type: object
+      properties:
+        stock_name:
+          type: string
+      example:
+        stock_name: 群創
+    User_search_out:
+      type: object
+      properties:
+        data:
+          type: string
+      example:
+        data: '20'
+    User_delete:
+      type: object
+      properties:
+        email:
+          type: string
+        stock_name:
+          type: string
+      example:
+        email: lio@gmail.com
+        stock_name: 群創

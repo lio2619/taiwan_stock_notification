@@ -43,7 +43,7 @@ export default {
 			.catch(error =>{
 				if(error.response){
 					if (error.response.status == 400){
-						this.error_message = '請輸入檢查信箱與股票名稱是否有誤';
+						this.error_message = '請檢查信箱與股票名稱是否有誤';
 					}else if(error.response.status == 406){
 						this.error_message = '請填入所有的資料';
 					}

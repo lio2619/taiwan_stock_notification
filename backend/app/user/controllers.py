@@ -1,5 +1,6 @@
 #controllers 寫要把甚麼東西放到資料庫裡
 
+import email
 from app import app
 from app import db
 from app import ma
@@ -10,6 +11,7 @@ from app.user.models import UserEmail
 
 from app.utils.request_schema import check_request_json_schema
 from app.utils.get_stock_price import read_csv_dict
+from app.utils.get_stock_price import stock_price
 
 from flask import make_response
 from flask import jsonify
@@ -63,7 +65,7 @@ def user_create_target_price():
     return make_response(jsonify({'message' : 'already have user add stock success'}), 200)
 
 #查詢該email下的股票
-@app.route('/user/get', methods = ['POST'])     #GET需要結合前端
+@app.route('/user/get', methods = ['POST'])
 def get_email_stock():
     request_schema = ['email']
     missing, response_body = check_request_json_schema(request_schema, request.json)
@@ -110,3 +112,50 @@ def update_target_price():
     db.session.commit()
 
     return make_response(jsonify({'message' : 'update target success'}), 200)
+
+#查詢該股票目前價錢
+@app.route('/user/search', methods = ['POST'])
+def search_now_price():
+    request_schema = ['stock_name']
+    missing, response_body = check_request_json_schema(request_schema, request.json)
+
+    if missing:
+        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 406)
+    
+    data = request.get_json()
+    stock_name   = data['stock_name']
+
+    code = read_csv_dict(stock_name)
+
+    if not code:
+        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 400)
+    
+    price = stock_price(code)
+
+    return make_response(jsonify({'data' : price}), 200)
+
+#刪除追蹤資訊
+@app.route('/user/delete', methods = ['POST'])
+def delete_data():
+    request_schema = ['email', 'stock_name']
+    missing, response_body = check_request_json_schema(request_schema, request.json)
+
+    if missing:
+        return make_response(jsonify({'error' : {'missing parameter' : response_body}}), 406)
+    
+    data = request.get_json()
+    email        = data['email']
+    stock_name   = data['stock_name']
+
+    user_email = UserEmail.query.filter_by(email = email).first()
+    if not user_email:
+        return make_response(jsonify({'error' : {'wrong email' : email}}), 400)
+
+    update_target = UserTargetPrice.query.filter_by(email = user_email.id, stock_name = stock_name).first()
+    if not update_target:
+        return make_response(jsonify({'error' : {'wrong stock name' : stock_name}}), 400)
+
+    db.session.delete(update_target)
+    db.session.commit()
+
+    return make_response(jsonify({'message' : "delete success"}), 200)

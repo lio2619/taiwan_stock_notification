@@ -1,12 +1,13 @@
 <template>
 	<div>
 		<nav>
-			<router-link to="/">Home</router-link> |
-			<router-link to="/about">About</router-link> |
-			<router-link to="/input_stock">input</router-link> |
-			<router-link to="/search">search</router-link> |
-			<router-link to="/update">update</router-link> |
-			<router-link to="/now">now</router-link>
+			<!--<router-link to="/">Home</router-link> |
+			<router-link to="/about">About</router-link> |-->
+			<router-link to="/input_stock">輸入</router-link> |
+			<router-link to="/search">查看</router-link> |
+			<router-link to="/delete">刪除</router-link> |
+			<router-link to="/update">更新</router-link> |
+			<router-link to="/now">搜尋</router-link>
 		</nav>
 		<router-view />
 	</div>

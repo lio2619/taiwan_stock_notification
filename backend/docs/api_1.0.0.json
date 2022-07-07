@@ -2,7 +2,7 @@
 	"openapi": "3.0.0",
 	"info": {
 		"title": "taiwan stock information",
-		"description": "台灣股票定期追蹤價錢 [Github](https://github.com/club-2-0)",
+		"description": "台灣股票定期追蹤價錢 [Github](https://github.com/lio2619/taiwan_stock_notification)",
 		"contact": {
 			"email": "lio261954@gmail.com"
 		},
